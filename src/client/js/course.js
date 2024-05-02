@@ -101,6 +101,10 @@ const configLocation = () => {
         isMapDrawn = true;
       };
       addMarker(new kakao.maps.LatLng(userLatitude, userLongitude));
+      // 자기자신일때만 맵이 움직이게 하기
+      if(clickCourse === 0) {
+        panTo(userLatitude, userLongitude);
+      }
     });
   }
 };
