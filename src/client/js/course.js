@@ -5,6 +5,38 @@ let userLongitude;
 let isMapDrawn = false;
 let courseData = []; // 마커를 위한 데이터 담을 공간
 let markers = [];
+let clickCourse = 0; // 0 : 내 자신, 나머지는 id (현재 선택한 코스)
+
+// 클릭 시 맵 움직이는 함수
+const panTo = (lat, lng) => {
+  const position = new kakao.maps.LatLng(lat, lng);
+  map.panTo(position);
+};
+
+const clickCourseList = (e, courseNo) => {
+  if(clickCourse !== courseNo) { // 같은 코스 메뉴를 클릭했을 때 동작하지 않게 하기위해
+    const courseWrap = document.querySelectorAll(".course");
+    for(let i = 0; i < courseWrap.length; i++) {
+      courseWrap[i].classList.remove("on");
+    }
+    // 클릭한 메뉴 색칠
+    e.currentTarget.classList.add("on");
+  
+    let courseLatitude; 
+    let courseLongitude;
+
+    if(courseNo === 0) {
+      courseLatitude = userLatitude;
+      courseLongitude = userLongitude;
+    }else {
+      const matchCourse = courseData.find(c => c.course_no === courseNo);
+      courseLatitude = matchCourse.course_latitude;
+      courseLongitude = matchCourse.course_longitude;
+    }
+    panTo(courseLatitude, courseLongitude);
+    clickCourse = courseNo;
+  }
+};
 
 // 마커를 그리는 함수
 const addMarker = (position) => {
@@ -57,6 +89,7 @@ const configLocation = () => {
     // navigator web api 위치정보 접근 , watchPosition : 감시
     navigator.geolocation.watchPosition((pos) => {
       // console.log(pos);
+      delMarker();
       userLatitude = pos.coords.latitude;
       userLongitude = pos.coords.longitude;
       // 전역변수 선언 이유 > 다른 위치에 있어도 값을 받기위해
@@ -76,11 +109,11 @@ const makeCourseNaviHTML = (data) => {
   const courseWrap = document.getElementById("courseWrap");
   let html = "";
   for (let i = 0; i < data.length; i++) {
-    html += `<li class="course">`
+    html += `<li class="course" onclick="clickCourseList(event, ${data[i].course_no})">`
     html += `<p>${data[i].course_name}</p>`;
     html += `</li>`
   }
-  html += `<li id="myPosition" class="course on">나의 위치</li>`
+  html += `<li id="myPosition" class="course on" onclick="clickCourseList(event, 0)">나의 위치</li>`
   courseWrap.innerHTML = html;
 }
 
