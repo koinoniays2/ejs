@@ -29,7 +29,7 @@ const courseCheckFetch = async (qrCode) => { // 서버로 가는 함수
     msgAlert("center", "방문완료", "success");
     setTimeout(() => {
       window.location.gref = "/course";
-    }, 2000)
+    }, 2000);
     return;
   }else {
     msgAlert("center", result.message, "error")
