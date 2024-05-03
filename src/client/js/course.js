@@ -57,7 +57,11 @@ const delMarker = () => {
 const addCourseMarker = (course) => {
   // 방문했으면 A이미지, 안했으면 B이미지
   let markerImageUrl = "/file/map_not_done.png";
-  let markerImageSize = new kakao.maps.Size(24, 35);
+  let markerImageSize = new kakao.maps.Size(25, 35);
+  if(course.user_courses_no) {
+    markerImageUrl = "/file/map_complete.jpg";
+    markerImageSize = new kakao.maps.Size(25, 35);
+  }
   const kakaoMarkerImage = new kakao.maps.MarkerImage(markerImageUrl, markerImageSize);
   const latlng = new kakao.maps.LatLng(course.course_latitude, course.course_longitude);
 
@@ -116,7 +120,10 @@ const makeCourseNaviHTML = (data) => {
   const courseWrap = document.getElementById("courseWrap");
   let html = "";
   for (let i = 0; i < data.length; i++) {
-    html += `<li class="course" onclick="clickCourseList(event, ${data[i].course_no})">`
+    html += `<li class="course" onclick="clickCourseList(event, ${data[i].course_no})">`;
+    if(data[i].user_courses_no) {
+      html += `<div class="mark-wrap"><img src="/file/complete.png" /></div>`;
+    }
     html += `<p>${data[i].course_name}</p>`;
     html += `</li>`
   }
@@ -126,7 +133,11 @@ const makeCourseNaviHTML = (data) => {
 
 // 코스 데이터를 불러오는 fetch 함수
 const getCourseList = async () => {
-  const response = await fetch("/api/course");
+  // accessToken 불러오기
+  const accessToken = localStorage.getItem("accessToken");
+  const response = await fetch("/api/course", {
+    headers: { Authorization: `Bearer ${accessToken}`}
+  });
   const result = await response.json();
   const data = result.data;
   console.log(data);
