@@ -1,7 +1,7 @@
 import express from "express";
-import { coursePage, introducePage, mainPage } from "./controller/webController.js";
-import db from "./config/db.js";
+import { coursePage, introducePage, joinPage, loginPage, mainPage } from "./controller/webController.js";
 import { getCourseList } from "./controller/courseController.js";
+import { joinUser } from "./controller/authController.js";
 
 const app = express();
 const POST = 8000;
@@ -21,9 +21,12 @@ app.use(express.json());
 app.get("/", mainPage);
 app.get("/introduce", introducePage);
 app.get("/course", coursePage);
+app.get("/login", loginPage);
+app.get("/join", joinPage);
 
 // apiRouter
 app.get("/api/course", getCourseList);
+app.post("/api/join", joinUser);
 
 // 서버 오픈
 app.listen(POST, () => {

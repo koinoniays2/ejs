@@ -75,6 +75,7 @@ const setCourseMarker = () => {
   }
 };
 
+// 지도 그리기
 const drawMap = (lat, lng) => {
   // 첫번째 인자: 지도 그릴 dom(html)
   map = new kakao.maps.Map(locationMap, {
@@ -90,6 +91,7 @@ const configLocation = () => {
     navigator.geolocation.watchPosition((pos) => {
       // console.log(pos);
       delMarker();
+      // 위치 갱신
       userLatitude = pos.coords.latitude;
       userLongitude = pos.coords.longitude;
       // 전역변수 선언 이유 > 다른 위치에 있어도 값을 받기위해
@@ -109,6 +111,7 @@ const configLocation = () => {
   }
 };
 
+// 네비게이션 바
 const makeCourseNaviHTML = (data) => {
   const courseWrap = document.getElementById("courseWrap");
   let html = "";
