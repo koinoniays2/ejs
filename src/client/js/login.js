@@ -42,3 +42,20 @@ const loginFetch = async () => {
 
 login.addEventListener("click", loginFetch);
 joinBtn.addEventListener("click", () => { window.location.href = "/join"; });
+
+// http://localhost:8000/login?error=need_login
+const checkError = () => {
+  const notFoundAccessTokenError = getParameterByName("error");
+  if (notFoundAccessTokenError == "not_found_access_token") {
+    msgAlert("bottom", "인증에 실패하였습니다.", "error");
+  } else if (notFoundAccessTokenError == "need_login") {
+    msgAlert("bottom", "로그인이 필요합니다.", "error");
+  }
+  const cleanUrl =
+    window.location.protocol +
+    "//" +
+    window.location.host +
+    window.location.pathname;
+  window.history.replaceState({}, document.title, cleanUrl);
+};
+checkError();
